@@ -6,21 +6,17 @@ internal abstract class ScheduleCreator<TPhase, TCommand> where TPhase : Phase
 {
     public IEnumerable<TCommand> Create(DateTime startDate, IEnumerable<TPhase> phases)
     {
-        List<TCommand> commands = new();
-
-        var orderedPhases = phases.OrderBy(x => x.Order);
-        foreach (var phase in orderedPhases)
-        {
-            for (int i = 0; i < phase.Repetitions; i++)
+        return phases.OrderBy(x => x.Order)
+            .SelectMany(phase =>
             {
-                var phaseCommands = GetCommands(startDate, phase);
-                commands.AddRange(phaseCommands);
-                startDate += new TimeSpan(phase.Hours.Value, phase.Minutes.Value, 0);
-            }
-
-        }
-
-        return commands;
+                List<TCommand> phaseCommands = new();
+                for (int i = 0; i < phase.Repetitions; i++)
+                {
+                    phaseCommands.AddRange(GetCommands(startDate, phase));
+                    startDate += new TimeSpan(phase.Hours.Value, phase.Minutes.Value, 0);
+                }
+                return phaseCommands;
+            });
     }
 
     protected abstract List<TCommand> GetCommands(DateTime startDate, TPhase phase);
