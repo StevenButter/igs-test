@@ -19,7 +19,7 @@ public sealed class Schedule
 
 
         public string Name { get; init; }
-
+        public int TrayNumber { get; init; }
         public IEnumerable<LightingCommand> LightingCommands { get; init; } = Enumerable.Empty<LightingCommand>();
         public IEnumerable<WateringCommand> WateringCommands { get; init; } = Enumerable.Empty<WateringCommand>();
     }

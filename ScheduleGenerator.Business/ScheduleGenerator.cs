@@ -27,6 +27,7 @@ public class ScheduleGenerator : IScheduleGenerator
             return new Schedule.Tray
             {
                 Name = recipe.Name,
+                TrayNumber = tray.TrayNumber,
                 LightingCommands = CreateLightingSchedule(tray.StartDate, recipe.LightingPhases),
                 WateringCommands = CreateWateringSchedule(tray.StartDate, recipe.WateringPhases)
             };

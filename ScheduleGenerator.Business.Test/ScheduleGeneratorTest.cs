@@ -219,6 +219,7 @@ public class ScheduleGeneratorTest
                 new Schedule.Tray
                 {
                     Name = "Basil",
+                    TrayNumber = 1,
                     LightingCommands = new List<Schedule.Tray.LightingCommand>
                     {
                         new Schedule.Tray.LightingCommand
@@ -318,6 +319,7 @@ public class ScheduleGeneratorTest
                 new Schedule.Tray
                 {
                     Name = "Strawberries",
+                    TrayNumber = 2,
                     LightingCommands = new List<Schedule.Tray.LightingCommand>
                     {
                         new Schedule.Tray.LightingCommand
