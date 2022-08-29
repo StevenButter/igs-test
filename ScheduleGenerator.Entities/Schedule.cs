@@ -20,11 +20,11 @@ public sealed class Schedule
 
         public string Name { get; init; }
 
-        public IEnumerable<LightingCommand> LightingCommands { get; init; }
-        public IEnumerable<WateringCommand> WateringCommands { get; init; }
+        public IEnumerable<LightingCommand> LightingCommands { get; init; } = Enumerable.Empty<LightingCommand>();
+        public IEnumerable<WateringCommand> WateringCommands { get; init; } = Enumerable.Empty<WateringCommand>();
     }
 
-    public IEnumerable<Tray> Trays { get; init; }
+    public IEnumerable<Tray> Trays { get; init; } = Enumerable.Empty<Tray>();
 }
 
 
