@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ScheduleGenerator.Business;
 using ScheduleGenerator.Entities;
+using ScheduleGeneratorApi.Model;
 
 namespace ScheduleGeneratorApi.Controllers;
 
@@ -16,8 +17,8 @@ public class ScheduleController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Schedule>> Post(IEnumerable<Tray> trays)
+    public async Task<ActionResult<Schedule>> Post(Input input)
     {
-        return await scheduleGenerator.Generate(trays).ConfigureAwait(false);
+        return await scheduleGenerator.Generate(input.Trays).ConfigureAwait(false);
     }
 }
