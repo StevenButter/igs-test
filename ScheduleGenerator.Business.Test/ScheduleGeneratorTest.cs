@@ -4,6 +4,7 @@ using Moq;
 using Moq.Protected;
 using ScheduleGenerator.Entities;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
 
 namespace ScheduleGenerator.Business.Test;
 
@@ -12,11 +13,14 @@ public class ScheduleGeneratorTest
     private readonly Mock<HttpMessageHandler> httpMessageHandler = new Mock<HttpMessageHandler>();
     private readonly HttpClient httpClient;
     private readonly ScheduleGenerator scheduleGenerator;
+    private readonly ScheduleGeneratorSettings scheduleGeneratorSettings;
 
     public ScheduleGeneratorTest()
     {
         httpClient = new HttpClient(httpMessageHandler.Object);
-        scheduleGenerator = new ScheduleGenerator(httpClient);
+
+        scheduleGeneratorSettings = new() { RecipeUri = "http://localhost:8080/recipe" };
+        scheduleGenerator = new ScheduleGenerator(httpClient, new OptionsWrapper<ScheduleGeneratorSettings>(scheduleGeneratorSettings));
     }
 
     [Fact]
@@ -150,7 +154,8 @@ public class ScheduleGeneratorTest
         httpMessageHandler.Protected()
             .Setup<Task<HttpResponseMessage>>(
                 "SendAsync",
-                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.Is<HttpRequestMessage>(x =>
+                    x.RequestUri == new Uri(scheduleGeneratorSettings.RecipeUri)),
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(
                 new HttpResponseMessage(HttpStatusCode.OK)
