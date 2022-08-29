@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ScheduleGenerator.Entities\ScheduleGenerator.Entities.csproj" />
+    <ProjectReference Include="..\ScheduleGenerator.Business\ScheduleGenerator.Business.csproj" />
   </ItemGroup>
 
 </Project>

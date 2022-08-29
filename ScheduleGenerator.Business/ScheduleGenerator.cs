@@ -5,7 +5,7 @@ using ScheduleGenerator.Entities;
 
 namespace ScheduleGenerator.Business;
 
-public class ScheduleGenerator
+public class ScheduleGenerator : IScheduleGenerator
 {
     const string RecipeUri = "http://localhost:8080/recipe";
     private readonly HttpClient httpClient;
