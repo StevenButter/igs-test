@@ -1,25 +1,27 @@
 ﻿using System.Net.Http.Json;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using ScheduleGenerator.Entities;
+using Microsoft.Extensions.Options;
+
 
 namespace ScheduleGenerator.Business;
 
 public class ScheduleGenerator : IScheduleGenerator
 {
-    const string RecipeUri = "http://localhost:8080/recipe";
     private readonly HttpClient httpClient;
+    private readonly IOptions<ScheduleGeneratorSettings> settings;
 
-    public ScheduleGenerator(HttpClient httpClient)
+    public ScheduleGenerator(HttpClient httpClient, IOptions<ScheduleGeneratorSettings> settings)
     {
         this.httpClient = httpClient;
+        this.settings = settings;
     }
 
     public async Task<Schedule> Generate(IEnumerable<Tray> trays)
     {
         var tray = trays.First();
 
-        var recipeResponse = await httpClient.GetAsync(RecipeUri);
+        var recipeResponse = await httpClient.GetAsync(settings.Value.RecipeUri);
         JsonNode? rsp = await recipeResponse.Content.ReadFromJsonAsync<JsonNode>();
 
         var recipes = (IEnumerable<JsonNode>?)rsp["recipes"];//.recipes;

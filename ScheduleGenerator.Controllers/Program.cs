@@ -1,16 +1,18 @@
 using ScheduleGenerator.Business;
+using ScheduleGenerator.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IScheduleGenerator, ScheduleGenerator.Business.ScheduleGenerator>();
+builder.Services.AddScoped<HttpClient>();
+
+builder.Services.Configure<ScheduleGeneratorSettings>(builder.Configuration.GetSection(ScheduleGeneratorSettings.SectionName));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<IScheduleGenerator, ScheduleGenerator.Business.ScheduleGenerator>();
-builder.Services.AddScoped<HttpClient>();
 
 var app = builder.Build();
 
