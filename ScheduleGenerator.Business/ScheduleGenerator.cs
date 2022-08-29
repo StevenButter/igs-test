@@ -19,34 +19,37 @@ public class ScheduleGenerator : IScheduleGenerator
 
     public async Task<Schedule> Generate(IEnumerable<Tray> trays)
     {
-        var tray = trays.First();
+        // var tray = trays.First();
 
         var recipeResponse = await httpClient.GetAsync(settings.Value.RecipeUri);
         var recipes = await recipeResponse.Content.ReadFromJsonAsync<Recipes>();
 
-        var recipe = recipes.AllRecipes.First(x => x.Name == tray.RecipeName);
+        var allRecipes = recipes.AllRecipes;
 
-        var lightingPhases = recipe.LightingPhases;
-        var lightingSchedule = CreateLightingSchedule(tray.StartDate, lightingPhases);
-
-        var wateringPhases = recipe.WateringPhases;
-        var wateringSchedule = CreateWateringSchedule(tray.StartDate, wateringPhases);
-
-        Schedule.Tray scheduleTray = new()
+        List<Schedule.Tray> traySchedule = new();
+        foreach (var tray in trays)
         {
-            Name = recipe.Name,
-            LightingCommands = lightingSchedule,
-            WateringCommands = wateringSchedule
-        };
+            var recipe = recipes.AllRecipes.First(x => x.Name == tray.RecipeName);
+
+            var lightingPhases = recipe.LightingPhases;
+            var lightingSchedule = CreateLightingSchedule(tray.StartDate, lightingPhases);
+
+            var wateringPhases = recipe.WateringPhases;
+            var wateringSchedule = CreateWateringSchedule(tray.StartDate, wateringPhases);
+
+            Schedule.Tray scheduleTray = new()
+            {
+                Name = recipe.Name,
+                LightingCommands = lightingSchedule,
+                WateringCommands = wateringSchedule
+            };
+            traySchedule.Add(scheduleTray);
+        }
 
         Schedule schedule = new()
         {
-            Trays = new List<Schedule.Tray>()
-            {
-                scheduleTray
-            }
+            Trays = traySchedule
         };
-
         return schedule;
     }
 

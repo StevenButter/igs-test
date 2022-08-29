@@ -46,6 +46,12 @@ public class ScheduleGeneratorTest
                 RecipeName = "Basil",
                 TrayNumber = 1,
                 StartDate = DateTime.Parse("2022-01-24T12:30:00.0000000Z")
+            },
+            new Tray
+            {
+                RecipeName = "Strawberries",
+                TrayNumber = 2,
+                StartDate = DateTime.Parse("2022-01-24T12:30:00.0000000Z")
             }
         };
     }
@@ -137,6 +143,48 @@ public class ScheduleGeneratorTest
                             amount = 100,
                             name = "Watering Phase 1",
                             order = 0,
+                            hours = 24,
+                            minutes = 0,
+                            repetitions = 2
+                        }
+                    }
+                },
+                new
+                {
+                    name = "Strawberries",
+                    lightingPhases = new List<object>
+                    {
+                        new
+                        {
+                            operations = new List<object>
+                            {
+                                new
+                                {
+                                    offsetHours = 0,
+                                    offsetMinutes = 0,
+                                    lightIntensity = 3
+                                },
+                                new
+                                {
+                                    offsetHours = 20,
+                                    offsetMinutes = 0,
+                                    lightIntensity = 0
+                                }
+                            },
+                            name = "Phase3",
+                            order = 0,
+                            hours = 24,
+                            minutes = 0,
+                            repetitions = 2
+                        }
+                    },
+                    wateringPhases = new List<object>
+                    {
+                        new
+                        {
+                            amount = 30,
+                            name = "Phase 3",
+                            order = 1,
                             hours = 24,
                             minutes = 0,
                             repetitions = 2
@@ -265,6 +313,49 @@ public class ScheduleGeneratorTest
                             Duration = new TimeSpan(12, 0, 0)
                         }
 
+                    }
+                },
+                new Schedule.Tray
+                {
+                    Name = "Strawberries",
+                    LightingCommands = new List<Schedule.Tray.LightingCommand>
+                    {
+                        new Schedule.Tray.LightingCommand
+                        {
+                            At = new DateTime(2022, 1, 24, 12, 30, 0),
+                            LightIntensity = 3
+                        },
+                        new Schedule.Tray.LightingCommand
+                        {
+                            At = new DateTime(2022, 1, 25, 8, 30, 0),
+                            LightIntensity = 0
+                        },
+
+                        new Schedule.Tray.LightingCommand
+                        {
+                            At = new DateTime(2022, 1, 25, 12, 30, 0),
+                            LightIntensity = 3
+                        },
+                        new Schedule.Tray.LightingCommand
+                        {
+                            At = new DateTime(2022, 1, 26, 8, 30, 0),
+                            LightIntensity = 0
+                        }
+                    },
+                    WateringCommands = new List<Schedule.Tray.WateringCommand>
+                    {
+                        new Schedule.Tray.WateringCommand
+                        {
+                            At = new DateTime(2022, 1, 24, 12, 30, 0),
+                            Amount = 30,
+                            Duration = new TimeSpan(24, 0, 0)
+                        },
+                        new Schedule.Tray.WateringCommand
+                        {
+                            At = new DateTime(2022, 1, 25, 12, 30, 0),
+                            Amount = 30,
+                            Duration = new TimeSpan(24, 0, 0)
+                        }
                     }
                 }
             }
