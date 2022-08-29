@@ -19,38 +19,28 @@ public class ScheduleGenerator : IScheduleGenerator
 
     public async Task<Schedule> Generate(IEnumerable<Tray> trays)
     {
-        // var tray = trays.First();
+        var recipes = await GetRecipes().ConfigureAwait(false);
 
+        var traySchedule = trays.Select(tray =>
+        {
+            var recipe = recipes.First(x => x.Name == tray.RecipeName);
+            return new Schedule.Tray
+            {
+                Name = recipe.Name,
+                LightingCommands = CreateLightingSchedule(tray.StartDate, recipe.LightingPhases),
+                WateringCommands = CreateWateringSchedule(tray.StartDate, recipe.WateringPhases)
+            };
+        });
+
+        return new Schedule { Trays = traySchedule };
+    }
+
+    private async Task<IEnumerable<Recipe>> GetRecipes()
+    {
         var recipeResponse = await httpClient.GetAsync(settings.Value.RecipeUri);
         var recipes = await recipeResponse.Content.ReadFromJsonAsync<Recipes>();
 
-        var allRecipes = recipes.AllRecipes;
-
-        List<Schedule.Tray> traySchedule = new();
-        foreach (var tray in trays)
-        {
-            var recipe = recipes.AllRecipes.First(x => x.Name == tray.RecipeName);
-
-            var lightingPhases = recipe.LightingPhases;
-            var lightingSchedule = CreateLightingSchedule(tray.StartDate, lightingPhases);
-
-            var wateringPhases = recipe.WateringPhases;
-            var wateringSchedule = CreateWateringSchedule(tray.StartDate, wateringPhases);
-
-            Schedule.Tray scheduleTray = new()
-            {
-                Name = recipe.Name,
-                LightingCommands = lightingSchedule,
-                WateringCommands = wateringSchedule
-            };
-            traySchedule.Add(scheduleTray);
-        }
-
-        Schedule schedule = new()
-        {
-            Trays = traySchedule
-        };
-        return schedule;
+        return recipes.AllRecipes;
     }
 
     public IEnumerable<Schedule.Tray.LightingCommand> CreateLightingSchedule(DateTime startDate, IEnumerable<LightingPhase> lightingPhases)
