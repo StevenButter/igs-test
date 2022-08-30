@@ -1,8 +1,15 @@
-﻿namespace ScheduleGenerator.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ScheduleGenerator.Entities;
 
 public record Tray
 {
-    public int TrayNumber { get; init; } = 0;
-    public string RecipeName { get; init; } = "";
-    public DateTime StartDate { get; init; } = DateTime.Now;
+    [Required]
+    public int? TrayNumber { get; init; }
+
+    [Required]
+    public string? RecipeName { get; init; }
+
+    [Required]
+    public DateTime? StartDate { get; init; }
 }
